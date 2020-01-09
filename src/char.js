@@ -1,6 +1,7 @@
-class Character()
+class Character
 {
-    constructor() {
-        
+    constructor()
+    {
+
     }
 }
