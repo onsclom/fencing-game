@@ -1,0 +1,38 @@
+html, body {
+  margin: 2%;
+  padding: 0;
+  background-color: rgb(90, 89, 89);
+  color: rgb(211, 211, 211);
+}
+
+canvas {
+  display: block;
+  margin: auto;
+  outline: black 5px solid;
+}
+
+p,h1,div {
+  text-align: center;
+  color: rgb(211, 211, 211);
+}
+
+#a {
+  background-color: rgb(140, 140, 0);
+  width: 500px;
+  margin:auto;
+}
+
+#curScore {
+  display: inline;
+  float: left;
+}
+
+#highScore {
+  display: inline;
+  float: right;
+} 
+
+#badName {
+  color: rgb(255, 100, 100);
+  display: none;
+}
