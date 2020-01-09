@@ -26,8 +26,9 @@ class Game
     draw()
     {
         //players 
-        this.leftPlayer.draw();
-        this.rightPlayer.draw();
+        this.playersUpdate();
+        this.playerCollision();
+        this.playersDraw();
 
         //platform
         fill(this.platform.color);
@@ -42,5 +43,28 @@ class Game
         textSize(this.textSize);
         fill(this.rightPlayer.color);
         text(this.rightScore, this.rightCoords[0], this.rightCoords[1]);
+    }
+
+    playersUpdate()
+    {
+        this.leftPlayer.update();
+        this.rightPlayer.update();
+    }
+
+    playersDraw()
+    {
+        this.leftPlayer.draw();
+        this.rightPlayer.draw();
+    }
+
+    playerCollision()
+    {
+        let overlap = this.leftPlayer.x+this.leftPlayer.size - this.rightPlayer.x;
+        if ( overlap > 0 ) //overlap is positive if they are overlapping
+        {
+            console.log("test");
+            this.leftPlayer.x -= overlap/2;
+            this.rightPlayer.x += overlap/2;
+        }
     }
 }

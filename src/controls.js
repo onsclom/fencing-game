@@ -1,57 +1,39 @@
 function keyPressed()
 {
-    if (keyCode === 65 || keyCode === 37)
+    if (keyCode === 65)
     {
-        char.left = true;
-        char.curDir = -1;
+        game.leftPlayer.leftPressed();
     }
-    else if (keyCode === 68 || keyCode === 39)
+    else if (keyCode === 37)
     {
-        char.right = true;
-        char.curDir = 1;
+        game.rightPlayer.leftPressed();
     }
-    else if (keyCode === 32 || keyCode === 87)
+    else if (keyCode === 68)
     {
-        char.jump();
+        game.leftPlayer.rightPressed();
     }
-    return;
+    else if (keyCode === 39)
+    {
+        game.rightPlayer.rightPressed();
+    }
 }
 
 function keyReleased()
 {
-    if (document.activeElement.nodeName == 'INPUT')
+    if (keyCode === 65)
     {
-        return;
+        game.leftPlayer.leftReleased();
     }
-
-    if (keyCode === 65 || keyCode === 37)
+    else if (keyCode === 37)
     {
-        char.left = false;
-        if (char.right)
-        {
-            char.curDir = 1;
-        }
-        else
-        {
-            char.curDir = 0;
-        }
+        game.rightPlayer.leftReleased();
     }
-    else if (keyCode === 68 || keyCode === 39)
+    else if (keyCode === 68)
     {
-
-        char.right = false;
-        if (char.left)
-        {
-            char.curDir = -1;
-        }
-        else
-        {
-            char.curDir = 0;
-        }
+        game.leftPlayer.rightReleased();
     }
-    else if (keyCode === 32 || keyCode === 87)
+    else if (keyCode === 39)
     {
-        char.jumpRelease();
+        game.rightPlayer.rightReleased();
     }
-    return;
 }
