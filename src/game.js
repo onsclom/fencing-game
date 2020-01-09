@@ -11,10 +11,12 @@ class Game
         };
 
         let charSize = 30;
-        let leftColor = color('#88f');
-        let rightColor = color('#f88');
-        this.leftPlayer = new Character((2 / 8) * width, this.platform.y - charSize, charSize, leftColor);
-        this.rightPlayer = new Character(width * (6 / 8) - charSize, this.platform.y - charSize, charSize, rightColor);
+        let leftColor = color('#44f');
+        let leftDisabledColor = color('#88f');
+        let rightColor = color('#f44');
+        let rightDisabledColor = color('#f88');
+        this.leftPlayer = new Character((2 / 8) * width, this.platform.y - charSize, charSize, leftColor, leftDisabledColor, "left");
+        this.rightPlayer = new Character(width * (6 / 8) - charSize, this.platform.y - charSize, charSize, rightColor, rightDisabledColor, "right");
 
         this.leftScore = 0;
         this.rightScore = 0;
@@ -53,8 +55,29 @@ class Game
 
     playersDraw()
     {
-        this.leftPlayer.draw();
-        this.rightPlayer.draw();
+        this.leftPlayer.drawPlayer();
+        this.rightPlayer.drawPlayer();
+
+        //determining weapon draw priority
+        if (this.leftPlayer.weapon.active && this.rightPlayer.weapon.active || this.leftPlayer.weapon.active)
+        {
+            if (this.leftPlayer.weapon.frame>=this.rightPlayer.weapon.frame)
+            {
+                this.rightPlayer.drawWeapon();
+                this.leftPlayer.drawWeapon();
+            }
+            else
+            {
+                this.leftPlayer.drawWeapon();
+                this.rightPlayer.drawWeapon();
+            }
+        }
+        else
+        {
+            this.leftPlayer.drawWeapon();
+            this.rightPlayer.drawWeapon();
+        }
+
     }
 
     playerCollision()
@@ -62,7 +85,6 @@ class Game
         let overlap = this.leftPlayer.x+this.leftPlayer.size - this.rightPlayer.x;
         if ( overlap > 0 ) //overlap is positive if they are overlapping
         {
-            console.log("test");
             this.leftPlayer.x -= overlap/2;
             this.rightPlayer.x += overlap/2;
         }

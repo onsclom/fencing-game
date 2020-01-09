@@ -14,6 +14,7 @@ canvas {
 p,h1,div {
   text-align: center;
   color: rgb(211, 211, 211);
+  line-height: 2;
 }
 
 #a {
