@@ -60,4 +60,9 @@ class Character
         }
         this.right = false;
     }
+
+    attack()
+    {
+        
+    }
 }

@@ -16,6 +16,14 @@ function keyPressed()
     {
         game.rightPlayer.rightPressed();
     }
+    else if (keyCode === 83)
+    {
+        game.leftPlayer.attack();
+    }
+    else if (keyCode === 40)
+    {
+        game.rightPlayer.attack();
+    }
 }
 
 function keyReleased()
