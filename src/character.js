@@ -46,6 +46,7 @@ class Character
             }
             else if (this.weapon.frame <= this.weapon.framesProtracting+this.weapon.framesMaxed)
             {
+                this.weapon.active = true;
             }
             else if (this.weapon.frame <= this.weapon.totalFrames)
             {
@@ -69,6 +70,16 @@ class Character
         else
         {
             this.x += this.dir * this.speed;
+        }
+
+        //checking if char past in the edge
+        if (this.side=="left" && this.x < 0)
+        {
+            this.x=0;
+        }
+        else if (this.side=="right" && this.x+this.size>width)
+        {
+            this.x=width-this.size;
         }
     }
 
@@ -147,5 +158,14 @@ class Character
         {
             this.attacking=true;
         }
+    }
+
+    reset()
+    {
+        this.disabledFrames=0;
+        this.weapon.frame=0;
+        this.weapon.active=false;
+        this.weapon.curSize=0;
+        this.attacking=false;
     }
 }

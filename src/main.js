@@ -5,7 +5,7 @@ function setup()
 {
     let canvas = createCanvas(600, 300);
 	canvas.parent('sketch-holder');
-	game = new Game();
+	game = new Game(0,0);
 	strokeWeight(4);
 	stroke('black');
 }

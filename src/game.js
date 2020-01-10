@@ -1,28 +1,30 @@
 class Game
 {
-    constructor()
+    constructor(leftScore, rightScore)
     {
         this.platform = {
-            x: (1 / 8) * width,
+            x: -100,
             y: (2 / 3) * height,
-            width: (6 / 8) * width,
-            height: (1 / 20) * height,
+            width: width*2,
+            height: (1/2) * height,
             color: color('#8f8')
         };
 
-        let charSize = 30;
+        this.charSize = 30;
         let leftColor = color('#44f');
         let leftDisabledColor = color('#88f');
         let rightColor = color('#f44');
         let rightDisabledColor = color('#f88');
-        this.leftPlayer = new Character((2 / 8) * width, this.platform.y - charSize, charSize, leftColor, leftDisabledColor, "left");
-        this.rightPlayer = new Character(width * (6 / 8) - charSize, this.platform.y - charSize, charSize, rightColor, rightDisabledColor, "right");
+        this.leftStart = (2 / 8) * width;
+        this.rightStart = width * (6 / 8) - this.charSize;
+        this.leftPlayer = new Character((2 / 8) * width, this.platform.y - this.charSize, this.charSize, leftColor, leftDisabledColor, "left");
+        this.rightPlayer = new Character(width * (6 / 8) - this.charSize, this.platform.y - this.charSize, this.charSize, rightColor, rightDisabledColor, "right");
 
-        this.leftScore = 0;
-        this.rightScore = 0;
+        this.leftScore = leftScore;
+        this.rightScore = rightScore;
         this.leftCoords = [30, 45];
         this.rightCoords = [width-30,45];
-        this.textSize=40;
+        this.textSize = 40;
     }
 
     draw()
@@ -45,6 +47,39 @@ class Game
         textSize(this.textSize);
         fill(this.rightPlayer.color);
         text(this.rightScore, this.rightCoords[0], this.rightCoords[1]);
+
+        //check swords
+        if (this.leftPlayer.x+this.leftPlayer.size+this.leftPlayer.weapon.curSize > this.rightPlayer.x && this.leftPlayer.weapon.active)
+        {
+            this.pointScored("left");
+        }
+        else if (this.rightPlayer.x-this.rightPlayer.weapon.curSize < this.leftPlayer.x+this.leftPlayer.size && this.rightPlayer.weapon.active)
+        {
+            this.pointScored("right");
+        }
+    }
+
+    pointScored(winner)
+    {
+        if (winner=="left")
+        {
+            this.leftScore+=1;
+
+        }
+        else if (winner=="right")
+        {
+            this.rightScore+=1;
+        }
+
+        this.newRound();
+    }
+
+    newRound()
+    {
+        this.leftPlayer.x = this.leftStart;
+        this.rightPlayer.x= this.rightStart;
+        this.leftPlayer.reset();
+        this.rightPlayer.reset();
     }
 
     playersUpdate()
