@@ -13,7 +13,7 @@ class Character
         this.dir = 0; //-1 is left, 0 neither, 1 right
         this.side = side; //"left" or "right"
         this.disabledFrames = 0;
-        this.missPenalty = 15;
+        this.missPenalty = 30;
 
         this.attacking = false;
         this.weapon = {
