@@ -1,12 +1,12 @@
 class Game
 {
-    constructor(leftScore, rightScore)
+    constructor()
     {
         this.platform = {
             x: -100,
             y: (2 / 3) * height,
-            width: width*2,
-            height: (1/2) * height,
+            width: width * 2,
+            height: (1 / 2) * height,
             color: color('#8f8')
         };
 
@@ -20,10 +20,10 @@ class Game
         this.leftPlayer = new Character((2 / 8) * width, this.platform.y - this.charSize, this.charSize, leftColor, leftDisabledColor, "left");
         this.rightPlayer = new Character(width * (6 / 8) - this.charSize, this.platform.y - this.charSize, this.charSize, rightColor, rightDisabledColor, "right");
 
-        this.leftScore = leftScore;
-        this.rightScore = rightScore;
+        this.leftScore = 0;
+        this.rightScore = 0;
         this.leftCoords = [30, 45];
-        this.rightCoords = [width-30,45];
+        this.rightCoords = [width - 30, 45];
         this.textSize = 40;
     }
 
@@ -49,11 +49,11 @@ class Game
         text(this.rightScore, this.rightCoords[0], this.rightCoords[1]);
 
         //check swords
-        if (this.leftPlayer.x+this.leftPlayer.size+this.leftPlayer.weapon.curSize > this.rightPlayer.x && this.leftPlayer.weapon.active)
+        if (this.leftPlayer.x + this.leftPlayer.size + this.leftPlayer.weapon.curSize > this.rightPlayer.x && this.leftPlayer.weapon.active)
         {
             this.pointScored("left");
         }
-        else if (this.rightPlayer.x-this.rightPlayer.weapon.curSize < this.leftPlayer.x+this.leftPlayer.size && this.rightPlayer.weapon.active)
+        else if (this.rightPlayer.x - this.rightPlayer.weapon.curSize < this.leftPlayer.x + this.leftPlayer.size && this.rightPlayer.weapon.active)
         {
             this.pointScored("right");
         }
@@ -61,23 +61,22 @@ class Game
 
     pointScored(winner)
     {
-        if (winner=="left")
+        if (winner == "left")
         {
-            this.leftScore+=1;
+            this.leftScore += 1;
 
         }
-        else if (winner=="right")
+        else if (winner == "right")
         {
-            this.rightScore+=1;
+            this.rightScore += 1;
         }
-
         this.newRound();
     }
 
     newRound()
     {
         this.leftPlayer.x = this.leftStart;
-        this.rightPlayer.x= this.rightStart;
+        this.rightPlayer.x = this.rightStart;
         this.leftPlayer.reset();
         this.rightPlayer.reset();
     }
@@ -96,7 +95,7 @@ class Game
         //determining weapon draw priority
         if (this.leftPlayer.weapon.active && this.rightPlayer.weapon.active || this.leftPlayer.weapon.active)
         {
-            if (this.leftPlayer.weapon.frame>=this.rightPlayer.weapon.frame)
+            if (this.leftPlayer.weapon.frame >= this.rightPlayer.weapon.frame)
             {
                 this.rightPlayer.drawWeapon();
                 this.leftPlayer.drawWeapon();
@@ -117,11 +116,11 @@ class Game
 
     playerCollision()
     {
-        let overlap = this.leftPlayer.x+this.leftPlayer.size - this.rightPlayer.x;
-        if ( overlap > 0 ) //overlap is positive if they are overlapping
+        let overlap = this.leftPlayer.x + this.leftPlayer.size - this.rightPlayer.x;
+        if (overlap > 0) //overlap is positive if they are overlapping
         {
-            this.leftPlayer.x -= overlap/2;
-            this.rightPlayer.x += overlap/2;
+            this.leftPlayer.x -= overlap / 2;
+            this.rightPlayer.x += overlap / 2;
         }
     }
 }

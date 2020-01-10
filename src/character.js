@@ -13,7 +13,7 @@ class Character
         this.dir = 0; //-1 is left, 0 neither, 1 right
         this.side = side; //"left" or "right"
         this.disabledFrames = 0;
-        this.missPenalty = 30;
+        this.missPenalty = 15;
 
         this.attacking = false;
         this.weapon = {
@@ -29,7 +29,7 @@ class Character
             framesMaxed: 10,
             framesRetracting: 15,
         }
-        this.weapon.totalFrames = this.weapon.framesProtracting+this.weapon.framesMaxed+this.weapon.framesRetracting;
+        this.weapon.totalFrames = this.weapon.framesProtracting + this.weapon.framesMaxed + this.weapon.framesRetracting;
     }
 
     update()
@@ -37,35 +37,37 @@ class Character
         //weapon stuff
         if (this.attacking)
         {
-            this.weapon.frame+=1;
+            this.weapon.frame += 1;
 
             if (this.weapon.frame <= this.weapon.framesProtracting)
             {
                 this.weapon.active = true;
-                this.weapon.curSize = this.weapon.maxSize*(this.weapon.frame/this.weapon.framesProtracting)
+                this.weapon.curSize = this.weapon.maxSize * (this.weapon.frame / this.weapon.framesProtracting)
+                this.disabledFrames = this.missPenalty;
             }
-            else if (this.weapon.frame <= this.weapon.framesProtracting+this.weapon.framesMaxed)
+            else if (this.weapon.frame <= this.weapon.framesProtracting + this.weapon.framesMaxed)
             {
                 this.weapon.active = true;
+                this.disabledFrames = this.missPenalty;
             }
             else if (this.weapon.frame <= this.weapon.totalFrames)
             {
                 this.weapon.active = false;
-                this.weapon.curSize = this.weapon.maxSize * ( (this.weapon.totalFrames-this.weapon.frame) / this.weapon.framesRetracting );
+                this.weapon.curSize = this.weapon.maxSize * ((this.weapon.totalFrames - this.weapon.frame) / this.weapon.framesRetracting);
                 this.disabledFrames = this.missPenalty;
             }
             else
             {
-                this.attacking=false;
-                this.weapon.frame=0;
+                this.attacking = false;
+                this.weapon.frame = 0;
             }
-        }   
+        }
 
         //player location - half speed if attacking
         if (this.disabledFrames > 0)
         {
             this.disabledFrames -= 1;
-            this.x += this.dir * (this.speed/4);
+            this.x += this.dir * (this.speed / 4);
         }
         else
         {
@@ -73,20 +75,20 @@ class Character
         }
 
         //checking if char past in the edge
-        if (this.side=="left" && this.x < 0)
+        if (this.side == "left" && this.x < 0)
         {
-            this.x=0;
+            this.x = 0;
         }
-        else if (this.side=="right" && this.x+this.size>width)
+        else if (this.side == "right" && this.x + this.size > width)
         {
-            this.x=width-this.size;
+            this.x = width - this.size;
         }
     }
 
     drawPlayer()
     {
         fill(this.color);
-        if (this.disabledFrames>0)
+        if (this.disabledFrames > 0)
         {
             fill(this.disabledColor);
         }
@@ -104,13 +106,13 @@ class Character
         {
             fill(this.weapon.unactiveColor);
         }
-        if (this.side=="left")
+        if (this.side == "left")
         {
-            rect(this.x+this.size, this.y+this.weapon.holdOffset, this.weapon.curSize, this.weapon.width);
+            rect(this.x + this.size, this.y + this.weapon.holdOffset, this.weapon.curSize, this.weapon.width);
         }
         else
         {
-            rect(this.x, this.y+this.weapon.holdOffset, -1*this.weapon.curSize, this.weapon.width);
+            rect(this.x, this.y + this.weapon.holdOffset, -1 * this.weapon.curSize, this.weapon.width);
         }
     }
 
@@ -156,16 +158,16 @@ class Character
     {
         if (this.disabledFrames == 0)
         {
-            this.attacking=true;
+            this.attacking = true;
         }
     }
 
     reset()
     {
-        this.disabledFrames=0;
-        this.weapon.frame=0;
-        this.weapon.active=false;
-        this.weapon.curSize=0;
-        this.attacking=false;
+        this.disabledFrames = 0;
+        this.weapon.frame = 0;
+        this.weapon.active = false;
+        this.weapon.curSize = 0;
+        this.attacking = false;
     }
 }
