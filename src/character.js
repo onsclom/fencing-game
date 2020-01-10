@@ -22,10 +22,10 @@ class Character
             maxSize: 50,
             curSize: 0,
             width: 10,
-            holdOffset: 5,
+            holdOffset: 3,
             active: false,
             activeColor: '#fff',
-            framesProtracting: 15,
+            framesProtracting: 5,
             framesMaxed: 10,
             framesRetracting: 15,
         }
