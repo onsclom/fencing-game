@@ -15,6 +15,9 @@ p,h1,div {
   text-align: center;
   color: rgb(211, 211, 211);
   line-height: 2;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+
 }
 
 #a {
