@@ -4,6 +4,8 @@ class Character
     {
         this.x = x;
         this.y = y;
+        this.initialx = x;
+        this.initialy = y;
         this.size = size;
         this.color = color;
         this.disabledColor = disColor;
@@ -14,6 +16,8 @@ class Character
         this.side = side; //"left" or "right"
         this.disabledFrames = 0;
         this.missPenalty = 30;
+        this.falling = false;
+        this.gravity = 0;
 
         this.attacking = false;
         this.weapon = {
@@ -78,13 +82,30 @@ class Character
         }
 
         //checking if char past in the edge
-        if (this.side == "left" && this.x < 0)
+        if (this.falling == false && this.side == "left" && this.x+this.size < width*.15)
         {
-            this.x = 0;
+            this.falling = true;
+            this.gravity = .25;
         }
-        else if (this.side == "right" && this.x + this.size > width)
+        else if (this.falling == false && this.side == "right" && this.x > width*.85)
         {
-            this.x = width - this.size;
+            this.falling = true;
+            this.gravity = .25;
+        }
+
+        if (this.falling)
+        {
+            this.gravity += .25;
+            this.y += this.gravity;
+
+            if (this.side=="left" && this.x+this.size > width*.15) //hardcoded platform end
+            {
+                this.x=width*.15-this.size;
+            }
+            else if (this.side=="right" && this.x < width*.85)
+            {
+                this.x=width-width*.15;
+            }
         }
     }
 
@@ -172,6 +193,10 @@ class Character
         this.weapon.active = false;
         this.weapon.curSize = 0;
         this.attacking = false;
+        this.falling = false;
+        this.gravity = 0;
+        this.y = this.initialy;
+        this.x = this.initialx;
     }
 
     forceBack()

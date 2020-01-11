@@ -3,10 +3,10 @@ class Game
     constructor()
     {
         this.platform = {
-            x: -100,
+            x: width*.15,
             y: (2 / 3) * height,
-            width: width * 2,
-            height: (1 / 2) * height,
+            width: width * .7,
+            height: (1 / 2) * height, //needs to go below so there is no double outline
             color: color('#8f8')
         };
 
@@ -53,7 +53,6 @@ class Game
         let rightSwordTouching = this.rightPlayer.x - this.rightPlayer.weapon.curSize < this.leftPlayer.x + this.leftPlayer.size && this.rightPlayer.weapon.active;
         if  (leftSwordTouching && rightSwordTouching)
         {
-            console.log("SAME TIME wee");
             this.leftPlayer.forceBack();
             this.rightPlayer.forceBack();
         }
@@ -64,6 +63,20 @@ class Game
         else if (rightSwordTouching)
         {
             this.pointScored("right");
+        }
+
+        //check if play fell
+        if (this.leftPlayer.y > height && this.rightPlayer.y > height)
+        {
+            this.pointScored("tie");
+        }
+        else if (this.leftPlayer.y > height)
+        {
+            this.pointScored("right");
+        }
+        else if (this.rightPlayer.y > height)
+        {
+            this.pointScored("left");
         }
     }
 
@@ -83,8 +96,6 @@ class Game
 
     newRound()
     {
-        this.leftPlayer.x = this.leftStart;
-        this.rightPlayer.x = this.rightStart;
         this.leftPlayer.reset();
         this.rightPlayer.reset();
     }
