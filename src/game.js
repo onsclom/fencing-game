@@ -49,11 +49,19 @@ class Game
         text(this.rightScore, this.rightCoords[0], this.rightCoords[1]);
 
         //check swords
-        if (this.leftPlayer.x + this.leftPlayer.size + this.leftPlayer.weapon.curSize > this.rightPlayer.x && this.leftPlayer.weapon.active)
+        let leftSwordTouching = this.leftPlayer.x + this.leftPlayer.size + this.leftPlayer.weapon.curSize > this.rightPlayer.x && this.leftPlayer.weapon.active;
+        let rightSwordTouching = this.rightPlayer.x - this.rightPlayer.weapon.curSize < this.leftPlayer.x + this.leftPlayer.size && this.rightPlayer.weapon.active;
+        if  (leftSwordTouching && rightSwordTouching)
+        {
+            console.log("SAME TIME wee");
+            this.leftPlayer.forceBack();
+            this.rightPlayer.forceBack();
+        }
+        else if (leftSwordTouching)
         {
             this.pointScored("left");
         }
-        else if (this.rightPlayer.x - this.rightPlayer.weapon.curSize < this.leftPlayer.x + this.leftPlayer.size && this.rightPlayer.weapon.active)
+        else if (rightSwordTouching)
         {
             this.pointScored("right");
         }

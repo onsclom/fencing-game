@@ -9,7 +9,7 @@ class Character
         this.disabledColor = disColor;
         this.left = false;
         this.right = false;
-        this.speed = 1.25;
+        this.speed = 2;
         this.dir = 0; //-1 is left, 0 neither, 1 right
         this.side = side; //"left" or "right"
         this.disabledFrames = 0;
@@ -30,6 +30,9 @@ class Character
             framesRetracting: 15,
         }
         this.weapon.totalFrames = this.weapon.framesProtracting + this.weapon.framesMaxed + this.weapon.framesRetracting;
+
+        this.forceFrames = 0;
+        this.forceTime = 30;
     }
 
     update()
@@ -169,5 +172,18 @@ class Character
         this.weapon.active = false;
         this.weapon.curSize = 0;
         this.attacking = false;
+    }
+
+    forceBack()
+    {
+        //smoothen this out later
+        if (this.side == "left")
+        {
+            this.x-=50;
+        }
+        else
+        {
+            this.x+=50;
+        }
     }
 }
