@@ -20,6 +20,15 @@ p,h1,div {
 
 }
 
+h1 {
+  line-height: 1;
+}
+
+#version{
+  margin-top: 0px;
+  margin-bottom:0px;
+}
+
 #a {
   background-color: rgb(140, 140, 0);
   width: 500px;

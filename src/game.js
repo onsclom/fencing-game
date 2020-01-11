@@ -3,7 +3,7 @@ class Game
     constructor()
     {
         this.platform = {
-            x: width*.15,
+            x: width * .15,
             y: (2 / 3) * height,
             width: width * .7,
             height: (1 / 2) * height, //needs to go below so there is no double outline
@@ -25,12 +25,12 @@ class Game
         this.rightScore = 0;
         this.leftCoords = [30, 45];
         this.rightCoords = [width - 30, 45];
-        this.middleCoords = [width*.5, 45];
+        this.middleCoords = [width * .5, 45];
         this.winColor = color(0);
         this.winText = "";
         this.largeText = 40;
 
-        
+
         this.freezeFrame = 0;
         this.freezeTime = 60;
 
@@ -44,7 +44,7 @@ class Game
             let transparentGray = color("gray");
             transparentGray.setAlpha(100);
             background(transparentGray);
-            
+
             textAlign(CENTER, CENTER);
             textSize(this.largeText);
             fill(this.winColor);
@@ -90,7 +90,7 @@ class Game
         //check swords
         let leftSwordTouching = this.leftPlayer.x + this.leftPlayer.size + this.leftPlayer.weapon.curSize > this.rightPlayer.x && this.leftPlayer.weapon.active;
         let rightSwordTouching = this.rightPlayer.x - this.rightPlayer.weapon.curSize < this.leftPlayer.x + this.leftPlayer.size && this.rightPlayer.weapon.active;
-        if  (leftSwordTouching && rightSwordTouching)
+        if (leftSwordTouching && rightSwordTouching)
         {
             this.leftPlayer.forceBack();
             this.rightPlayer.forceBack();
@@ -139,7 +139,7 @@ class Game
             this.winColor = this.platform.color;
             this.winText = "TIE";
         }
-        this.freezeFrame=this.freezeTime;
+        this.freezeFrame = this.freezeTime;
         this.newRound();
     }
 

@@ -82,22 +82,22 @@ class Character
         }
 
         //slowdown force (friction)
-        if (this.currentForce!=0)
+        if (this.currentForce != 0)
         {
-            this.currentForce*=.9;
+            this.currentForce *= .9;
         }
-        if ( Math.abs(this.currentForce) < .1)
+        if (Math.abs(this.currentForce) < .1)
         {
-            this.currentForce=0;
+            this.currentForce = 0;
         }
 
         //checking if char past in the edge
-        if (this.falling == false && this.side == "left" && this.x+this.size < width*.15)
+        if (this.falling == false && this.side == "left" && this.x + this.size < width * .15)
         {
             this.falling = true;
             this.gravity = .25;
         }
-        else if (this.falling == false && this.side == "right" && this.x > width*.85)
+        else if (this.falling == false && this.side == "right" && this.x > width * .85)
         {
             this.falling = true;
             this.gravity = .25;
@@ -108,13 +108,13 @@ class Character
             this.gravity += .25;
             this.y += this.gravity;
 
-            if (this.side=="left" && this.x+this.size > width*.15) //hardcoded platform end
+            if (this.side == "left" && this.x + this.size > width * .15) //hardcoded platform end
             {
-                this.x=width*.15-this.size;
+                this.x = width * .15 - this.size;
             }
-            else if (this.side=="right" && this.x < width*.85)
+            else if (this.side == "right" && this.x < width * .85)
             {
-                this.x=width-width*.15;
+                this.x = width - width * .15;
             }
         }
     }
@@ -214,11 +214,11 @@ class Character
         //smoothen this out later
         if (this.side == "left")
         {
-            this.currentForce=-2;
+            this.currentForce = -2;
         }
         else
         {
-            this.currentForce=2;
+            this.currentForce = 2;
         }
     }
 }
