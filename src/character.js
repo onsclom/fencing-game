@@ -15,7 +15,7 @@ class Character
         this.dir = 0; //-1 is left, 0 neither, 1 right
         this.side = side; //"left" or "right"
         this.disabledFrames = 0;
-        this.missPenalty = 30;
+        this.missPenalty = 20;
         this.falling = false;
         this.gravity = 0;
 
@@ -31,7 +31,7 @@ class Character
             activeColor: '#fff',
             framesProtracting: 5,
             framesMaxed: 10,
-            framesRetracting: 15,
+            framesRetracting: 15, //not drawing this anymore, so framesRetracting+missPenalty = total lag
         }
         this.weapon.totalFrames = this.weapon.framesProtracting + this.weapon.framesMaxed + this.weapon.framesRetracting;
 
@@ -60,7 +60,7 @@ class Character
             else if (this.weapon.frame <= this.weapon.totalFrames)
             {
                 this.weapon.active = false;
-                this.weapon.curSize = this.weapon.maxSize * ((this.weapon.totalFrames - this.weapon.frame) / this.weapon.framesRetracting);
+                this.weapon.curSize = 0;
                 this.disabledFrames = this.missPenalty;
             }
             else
