@@ -36,7 +36,7 @@ class Character
         this.weapon.totalFrames = this.weapon.framesProtracting + this.weapon.framesMaxed + this.weapon.framesRetracting;
 
         this.forceFrames = 0;
-        this.forceTime = 30;
+        this.currentForce = 0;
     }
 
     update()
@@ -74,11 +74,21 @@ class Character
         if (this.disabledFrames > 0)
         {
             this.disabledFrames -= 1;
-            this.x += this.dir * (this.speed / 4);
+            this.x += this.dir * (this.speed / 4) + this.currentForce;
         }
         else
         {
-            this.x += this.dir * this.speed;
+            this.x += this.dir * this.speed + this.currentForce;
+        }
+
+        //slowdown force (friction)
+        if (this.currentForce!=0)
+        {
+            this.currentForce*=.9;
+        }
+        if ( Math.abs(this.currentForce) < .1)
+        {
+            this.currentForce=0;
         }
 
         //checking if char past in the edge
@@ -204,11 +214,11 @@ class Character
         //smoothen this out later
         if (this.side == "left")
         {
-            this.x-=50;
+            this.currentForce=-2;
         }
         else
         {
-            this.x+=50;
+            this.currentForce=2;
         }
     }
 }
