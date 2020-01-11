@@ -20,15 +20,54 @@ class Game
         this.leftPlayer = new Character((2 / 8) * width, this.platform.y - this.charSize, this.charSize, leftColor, leftDisabledColor, "left");
         this.rightPlayer = new Character(width * (6 / 8) - this.charSize, this.platform.y - this.charSize, this.charSize, rightColor, rightDisabledColor, "right");
 
+
         this.leftScore = 0;
         this.rightScore = 0;
         this.leftCoords = [30, 45];
         this.rightCoords = [width - 30, 45];
-        this.textSize = 40;
+        this.middleCoords = [width*.5, 45];
+        this.winColor = color(0);
+        this.winText = "";
+        this.largeText = 40;
+
+        
+        this.freezeFrame = 0;
+        this.freezeTime = 60;
+
+        this.backgroundColor = color("#bbb");
     }
 
     draw()
     {
+        if (this.freezeFrame == this.freezeTime) //first frame of freeze
+        {
+            let transparentGray = color("gray");
+            transparentGray.setAlpha(100);
+            background(transparentGray);
+            
+            textAlign(CENTER, CENTER);
+            textSize(this.largeText);
+            fill(this.winColor);
+            text(this.winText, this.middleCoords[0], this.middleCoords[1]);
+        }
+        if (this.freezeFrame == 1) //incase someone accidently attacked during pause
+        {
+            this.leftPlayer.attacking = false;
+            this.rightPlayer.attacking = false;
+        }
+        if (this.freezeFrame > 0)
+        {
+            this.freezeFrame -= 1;
+        }
+        else
+        {
+            this.runningDraw();
+        }
+    }
+
+    runningDraw()
+    {
+        background(color(this.backgroundColor));
         //players 
         this.playersUpdate();
         this.playerCollision();
@@ -40,11 +79,11 @@ class Game
 
         //coords
         textAlign(CENTER, CENTER);
-        textSize(this.textSize);
+        textSize(this.largeText);
         fill(this.leftPlayer.color);
         text(this.leftScore, this.leftCoords[0], this.leftCoords[1]);
 
-        textSize(this.textSize);
+        textSize(this.largeText);
         fill(this.rightPlayer.color);
         text(this.rightScore, this.rightCoords[0], this.rightCoords[1]);
 
@@ -85,12 +124,22 @@ class Game
         if (winner == "left")
         {
             this.leftScore += 1;
+            this.winColor = this.leftPlayer.color;
+            this.winText = "BLUE WINS!";
 
         }
         else if (winner == "right")
         {
             this.rightScore += 1;
+            this.winColor = this.rightPlayer.color;
+            this.winText = "RED WINS!";
         }
+        else if (winner == "tie")
+        {
+            this.winColor = this.platform.color;
+            this.winText = "TIE";
+        }
+        this.freezeFrame=this.freezeTime;
         this.newRound();
     }
 

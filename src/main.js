@@ -1,4 +1,3 @@
-let backgroundColor = '#bbb';
 let game;
 
 function setup()
@@ -13,7 +12,5 @@ function setup()
 
 function draw()
 {
-    background(color(backgroundColor));
-
     game.draw();
 }
