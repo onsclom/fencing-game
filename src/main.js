@@ -5,8 +5,8 @@ function setup()
     let canvas = createCanvas(600, 300);
     canvas.parent('sketch-holder');
     game = new Game();
-    strokeWeight(4);
-    stroke('black');
+    strokeWeight(1);
+    stroke(color('rgb(211,211,211)'));
 }
 
 

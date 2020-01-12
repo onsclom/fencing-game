@@ -34,7 +34,7 @@ class Game
         this.freezeFrame = 0;
         this.freezeTime = 60;
 
-        this.backgroundColor = color("#bbb");
+        this.backgroundColor = color('rgb(40,40,40)');
     }
 
     draw()
@@ -92,7 +92,7 @@ class Game
 
     playersAndPlatformDraw()
     {
-        background(color(this.backgroundColor));
+        background(this.backgroundColor);
         //players 
         this.playersUpdate();
         this.playerCollision();
