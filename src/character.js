@@ -2,6 +2,8 @@ class Character
 {
     constructor(x, y, size, color, disColor, side)
     {
+        this.runtime = 1; //FOR SLOW MO!
+
         this.x = x;
         this.y = y;
         this.initialx = x;
@@ -13,6 +15,7 @@ class Character
         this.right = false;
         this.speed = 2;
         this.dir = 0; //-1 is left, 0 neither, 1 right
+        this.oldDir = 0; //saves for slowmo TODO
         this.side = side; //"left" or "right"
         this.disabledFrames = 0;
         this.missPenalty = 20;
@@ -41,10 +44,11 @@ class Character
 
     update()
     {
+
         //weapon stuff
         if (this.attacking)
         {
-            this.weapon.frame += 1;
+            this.weapon.frame += 1 * this.runtime;
 
             if (this.weapon.frame <= this.weapon.framesProtracting)
             {
@@ -52,12 +56,12 @@ class Character
                 this.weapon.curSize = this.weapon.maxSize * (this.weapon.frame / this.weapon.framesProtracting)
                 this.disabledFrames = this.missPenalty;
             }
-            else if (this.weapon.frame <= this.weapon.framesProtracting + this.weapon.framesMaxed)
+            else if (this.weapon.frame <= (this.weapon.framesProtracting + this.weapon.framesMaxed))
             {
                 this.weapon.active = true;
                 this.disabledFrames = this.missPenalty;
             }
-            else if (this.weapon.frame <= this.weapon.totalFrames)
+            else if (this.weapon.frame <= (this.weapon.totalFrames))
             {
                 this.weapon.active = false;
                 this.weapon.curSize = 0;
@@ -70,15 +74,20 @@ class Character
             }
         }
 
+        //oldDir for slowmo
+        if (this.runtime==1)
+        {
+            this.oldDir = this.dir;
+        }
         //player location - half speed if attacking
         if (this.disabledFrames > 0)
         {
-            this.disabledFrames -= 1;
-            this.x += this.dir * (this.speed / 4) + this.currentForce;
+            this.disabledFrames -= 1 * this.runtime;
+            this.x += (this.oldDir * (this.speed / 4) + this.currentForce) * this.runtime;
         }
         else
         {
-            this.x += this.dir * this.speed + this.currentForce;
+            this.x += (this.oldDir * this.speed + this.currentForce) * this.runtime;
         }
 
         //slowdown force (friction)
@@ -95,18 +104,18 @@ class Character
         if (this.falling == false && this.side == "left" && this.x + this.size < width * .15)
         {
             this.falling = true;
-            this.gravity = .25;
+            this.gravity = .25 * this.runtime;
         }
         else if (this.falling == false && this.side == "right" && this.x > width * .85)
         {
             this.falling = true;
-            this.gravity = .25;
+            this.gravity = .25 * this.runtime;
         }
 
         if (this.falling)
         {
-            this.gravity += .25;
-            this.y += this.gravity;
+            this.gravity += .5*this.runtime;
+            this.y += this.gravity * this.runtime;
 
             if (this.side == "left" && this.x + this.size > width * .15) //hardcoded platform end
             {
@@ -134,7 +143,9 @@ class Character
         //weapon
         if (this.weapon.active)
         {
-            fill(this.weapon.activeColor);
+            this.color.setAlpha(150);
+            fill(this.color);
+            this.color.setAlpha(255);
         }
         else
         {

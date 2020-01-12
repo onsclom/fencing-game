@@ -39,8 +39,13 @@ class Game
 
     draw()
     {
-        if (this.freezeFrame == this.freezeTime) //first frame of freeze
+        if (this.freezeFrame > 0)
         {
+            this.leftPlayer.runtime=.1;
+            this.rightPlayer.runtime=.1;
+
+            this.playersAndPlatformDraw();
+    
             let transparentGray = color("gray");
             transparentGray.setAlpha(100);
             background(transparentGray);
@@ -49,15 +54,21 @@ class Game
             textSize(this.largeText);
             fill(this.winColor);
             text(this.winText, this.middleCoords[0], this.middleCoords[1]);
+
+            this.scoreDraw();
+           
+            
+            this.freezeFrame -= 1;
         }
-        if (this.freezeFrame == 1) //incase someone accidently attacked during pause
+        else if (this.freezeFrame == 0) //incase someone accidently attacked during pause
         {
             this.leftPlayer.attacking = false;
             this.rightPlayer.attacking = false;
-        }
-        if (this.freezeFrame > 0)
-        {
+            this.newRound();
             this.freezeFrame -= 1;
+            
+            this.leftPlayer.runtime=1;
+            this.rightPlayer.runtime=1;
         }
         else
         {
@@ -65,7 +76,21 @@ class Game
         }
     }
 
-    runningDraw()
+    scoreDraw()
+    {
+        //coords
+        textAlign(CENTER, CENTER);
+        textSize(this.largeText);
+        fill(this.leftPlayer.color);
+        text(this.leftScore, this.leftCoords[0], this.leftCoords[1]);
+
+        textSize(this.largeText);
+        fill(this.rightPlayer.color);
+        text(this.rightScore, this.rightCoords[0], this.rightCoords[1]);
+    }
+
+
+    playersAndPlatformDraw()
     {
         background(color(this.backgroundColor));
         //players 
@@ -76,17 +101,10 @@ class Game
         //platform
         fill(this.platform.color);
         rect(this.platform.x, this.platform.y, this.platform.width, this.platform.height);
+    }
 
-        //coords
-        textAlign(CENTER, CENTER);
-        textSize(this.largeText);
-        fill(this.leftPlayer.color);
-        text(this.leftScore, this.leftCoords[0], this.leftCoords[1]);
-
-        textSize(this.largeText);
-        fill(this.rightPlayer.color);
-        text(this.rightScore, this.rightCoords[0], this.rightCoords[1]);
-
+    winConditionChecks()
+    {
         //check swords
         let leftSwordTouching = this.leftPlayer.x + this.leftPlayer.size + this.leftPlayer.weapon.curSize > this.rightPlayer.x && this.leftPlayer.weapon.active;
         let rightSwordTouching = this.rightPlayer.x - this.rightPlayer.weapon.curSize < this.leftPlayer.x + this.leftPlayer.size && this.rightPlayer.weapon.active;
@@ -119,6 +137,13 @@ class Game
         }
     }
 
+    runningDraw()
+    {
+        this.playersAndPlatformDraw();
+        this.scoreDraw();
+        this.winConditionChecks();
+    }
+
     pointScored(winner)
     {
         if (winner == "left")
@@ -140,7 +165,6 @@ class Game
             this.winText = "TIE";
         }
         this.freezeFrame = this.freezeTime;
-        this.newRound();
     }
 
     newRound()
