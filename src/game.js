@@ -25,7 +25,7 @@ class Game
         this.rightScore = 0;
         this.leftCoords = [30, 45];
         this.rightCoords = [width - 30, 45];
-        this.middleCoords = [width * .5, 45];
+        this.middleCoords = [width * .5, 100];
         this.winColor = color(0);
         this.winText = "";
         this.largeText = 40;
@@ -107,7 +107,9 @@ class Game
     {
         //check swords
         let leftSwordTouching = this.leftPlayer.x + this.leftPlayer.size + this.leftPlayer.weapon.curSize > this.rightPlayer.x && this.leftPlayer.weapon.active;
+        leftSwordTouching = leftSwordTouching && (this.leftPlayer.y+this.leftPlayer.weapon.holdOffset+this.leftPlayer.weapon.width > this.rightPlayer.y && this.leftPlayer.y+this.leftPlayer.weapon.holdOffset < this.rightPlayer.y+this.rightPlayer.size);
         let rightSwordTouching = this.rightPlayer.x - this.rightPlayer.weapon.curSize < this.leftPlayer.x + this.leftPlayer.size && this.rightPlayer.weapon.active;
+        rightSwordTouching = rightSwordTouching && (this.rightPlayer.y+this.rightPlayer.weapon.holdOffset+this.rightPlayer.weapon.width > this.leftPlayer.y && this.rightPlayer.y+this.rightPlayer.weapon.holdOffset < this.leftPlayer.y+this.leftPlayer.size);
         if (leftSwordTouching && rightSwordTouching)
         {
             this.leftPlayer.forceBack();
