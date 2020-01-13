@@ -40,6 +40,9 @@ class Character
 
         this.forceFrames = 0;
         this.currentForce = 0;
+
+        this.dashing = false;
+        this.dashCooldown = 30;
         
         this.ready = false;
     }
@@ -95,7 +98,7 @@ class Character
         //slowdown force (friction)
         if (this.currentForce != 0)
         {
-            this.currentForce *= .5;
+            this.currentForce *= .9;
         }
         if (Math.abs(this.currentForce) < .1)
         {
@@ -128,6 +131,13 @@ class Character
                 this.x = width - width * .15;
             }
         }
+
+        //update dashing time
+        this.dashFrame -= 1 * this.runtime;
+        if (this.dashFrame < 0)
+        {
+            this.dashing = false;
+        }
     }
 
     drawPlayer()
@@ -138,6 +148,28 @@ class Character
             fill(this.disabledColor);
         }
         square(this.x, this.y, this.size);
+
+        //draw dashing arrow above char
+        if (this.dashing)
+        {
+            textAlign(CENTER, CENTER);
+            textSize(20);
+            this.color.setAlpha(150 + 105*(this.dashFrame/this.dashCooldown));
+            fill(this.color);
+            this.color.setAlpha(255);
+            let dir;
+            if (this.dashDir=="left")
+            {
+                dir="⬅";
+            }
+            else
+            {
+                dir="➡"
+            }
+            strokeWeight(0);
+            text(dir, this.x+this.size/2, this.y-20);
+            strokeWeight(1);
+        }
     }
 
     drawWeapon()
@@ -203,9 +235,44 @@ class Character
 
     attack()
     {
-        if (this.disabledFrames == 0)
+        if (this.disabledFrames == 0 && this.dir == 0)
         {
             this.attacking = true;
+        }
+        else if (this.disabledFrames == 0 && ((this.side=="left" && this.dir == -1) && (this.dashing==false || this.dashDir!="left") 
+        || (this.side=="right" && this.dir == 1) && (this.dashing==false || this.dashDir!="right")))
+        {
+            //dash back
+            this.dashing = true;
+            this.dashFrame = this.dashCooldown;
+            this.forceBack(4);
+
+            if (this.dir == 1)
+            {
+                this.dashDir = "right";
+            }
+            else
+            {
+                this.dashDir = "left";
+            }
+
+        }
+        else if (this.disabledFrames == 0 && ((this.side=="left" && this.dir == 1) && (this.dashing==false || this.dashDir!="right") 
+            || (this.side=="right" && this.dir == -1) && (this.dashing==false || this.dashDir!="left")))
+        {
+            //dash forward
+            this.dashing = true;
+            this.dashFrame = this.dashCooldown;
+            this.forceBack(-4);
+
+            if (this.dir == 1)
+            {
+                this.dashDir = "right";
+            }
+            else
+            {
+                this.dashDir = "left";
+            }
         }
     }
 
@@ -218,20 +285,23 @@ class Character
         this.attacking = false;
         this.falling = false;
         this.gravity = 0;
+        this.currentForce = 0;
+        this.dashing = false;
         this.y = this.initialy;
         this.x = this.initialx;
     }
 
-    forceBack()
+    forceBack(amt)
     {
         //smoothen this out later
         if (this.side == "left")
         {
-            this.currentForce = -6;
+            this.currentForce = -amt;
         }
         else
         {
-            this.currentForce = 6;
+            this.currentForce = amt;
         }
     }
+
 }

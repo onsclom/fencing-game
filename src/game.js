@@ -125,7 +125,7 @@ class Game
         textAlign(CENTER, CENTER);
         textSize(this.largeText);
         fill('white');
-        text("Press attack to ready up", this.middleCoords[0], this.middleCoords[1]);
+        text("Hold attack to ready up", this.middleCoords[0], this.middleCoords[1]);
 
         if (this.leftPlayer.ready && this.rightPlayer.ready)
         {
@@ -183,8 +183,8 @@ class Game
         rightSwordTouching = rightSwordTouching && (this.rightPlayer.y+this.rightPlayer.weapon.holdOffset+this.rightPlayer.weapon.width > this.leftPlayer.y && this.rightPlayer.y+this.rightPlayer.weapon.holdOffset < this.leftPlayer.y+this.leftPlayer.size);
         if (leftSwordTouching && rightSwordTouching)
         {
-            this.leftPlayer.forceBack();
-            this.rightPlayer.forceBack();
+            this.leftPlayer.forceBack(4);
+            this.rightPlayer.forceBack(4);
         }
         else if (leftSwordTouching)
         {
