@@ -35,11 +35,26 @@ class Game
         this.freezeTime = 60;
 
         this.backgroundColor = color('rgb(40,40,40)');
+
+        this.startup = true;
+        this.countdownTime = 180;
+        this.countdown = false;
     }
 
     draw()
     {
-        if (this.freezeFrame > 0)
+        if (this.startup)
+        {
+            if (this.countdown)
+            {
+                this.countdownScreen();
+            }
+            else
+            {
+                this.readyUp();
+            }
+        }
+        else if (this.freezeFrame > 0)
         {
             this.leftPlayer.runtime=.1;
             this.rightPlayer.runtime=.1;
@@ -73,6 +88,62 @@ class Game
         else
         {
             this.runningDraw();
+        }
+    }
+
+    countdownScreen()
+    {
+        if (this.countdownTime>0)
+        {
+            background(this.backgroundColor);
+            this.playersDraw();
+            //platform
+            fill(this.platform.color);
+            rect(this.platform.x, this.platform.y, this.platform.width, this.platform.height);
+
+            this.backgroundColor.setAlpha(150);
+            background(this.backgroundColor);
+            this.backgroundColor.setAlpha(255);
+
+            textAlign(CENTER, CENTER);
+            textSize(this.largeText);
+            fill("white");
+            text(Math.floor(this.countdownTime/60)+1, this.middleCoords[0], this.middleCoords[1]);
+            this.countdownTime-=1;
+        }
+        else
+        {
+            this.countdown=false;
+            this.startup=false;
+        }
+    }
+
+    readyUp()
+    {
+        background('gray');
+
+        textAlign(CENTER, CENTER);
+        textSize(this.largeText);
+        fill('white');
+        text("Press attack to ready up", this.middleCoords[0], this.middleCoords[1]);
+
+        if (this.leftPlayer.ready && this.rightPlayer.ready)
+        {
+            this.countdown = true;
+        }
+        else if (this.leftPlayer.ready)
+        {   
+            textAlign(CENTER, CENTER);
+            textSize(60);
+            fill('white');
+            text("✓", this.leftCoords[0]+width*.25, height*.8-this.leftCoords[1]);
+        }
+        else if (this.rightPlayer.ready)
+        {   
+            textAlign(CENTER, CENTER);
+            textSize(60);
+            fill('white');
+            text("✓", this.rightCoords[0]-width*.25, height*.8-this.rightCoords[1]);
         }
     }
 

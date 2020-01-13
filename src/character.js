@@ -40,6 +40,8 @@ class Character
 
         this.forceFrames = 0;
         this.currentForce = 0;
+        
+        this.ready = false;
     }
 
     update()

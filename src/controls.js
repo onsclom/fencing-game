@@ -19,10 +19,12 @@ function keyPressed()
     else if (keyCode === 83)
     {
         game.leftPlayer.attack();
+        game.leftPlayer.ready=true;
     }
     else if (keyCode === 40)
     {
         game.rightPlayer.attack();
+        game.rightPlayer.ready=true;
     }
 }
 
@@ -43,5 +45,13 @@ function keyReleased()
     else if (keyCode === 39)
     {
         game.rightPlayer.rightReleased();
+    }
+    else if (keyCode === 83)
+    {
+        game.leftPlayer.ready=false;
+    }
+    else if (keyCode === 40)
+    {
+        game.rightPlayer.ready=false;
     }
 }
