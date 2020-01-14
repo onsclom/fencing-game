@@ -18,7 +18,7 @@ class Character
         this.oldDir = 0; //saves for slowmo TODO
         this.side = side; //"left" or "right"
         this.disabledFrames = 0;
-        this.missPenalty = 20;
+        this.missPenalty = 40;
         this.falling = false;
         this.gravity = 0;
 
