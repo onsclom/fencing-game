@@ -189,7 +189,7 @@ class Game
             {
                 this.pointScored("left");
             }
-            else if (ththis.leftPlayer.weapon.curSize < this.rightPlayer.weapon.curSize)
+            else if (this.leftPlayer.weapon.curSize < this.rightPlayer.weapon.curSize)
             {
                 this.pointScored("right");
             }
