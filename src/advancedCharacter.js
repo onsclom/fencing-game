@@ -20,7 +20,7 @@ class Character
         this.side = side; //"left" or "right"
         this.disabledFrames = 0;
         this.inDashAttackLag = false;
-        this.missPenalty = 20;
+        this.missPenalty = 40;
         this.falling = false;
         this.gravity = 0;
 
@@ -35,9 +35,9 @@ class Character
             holdOffset: 3,
             active: false,
             activeColor: '#fff',
-            framesProtracting: 5,
-            framesMaxed: 10,
-            framesRetracting: 15, //not drawing this anymore, so framesRetracting+missPenalty = total lag
+            framesProtracting: 3,
+            framesMaxed: 10,//10
+            framesRetracting: 1, //these frames do not allow movement
         }
         this.weapon.totalFrames = this.weapon.framesProtracting + this.weapon.framesMaxed + this.weapon.framesRetracting;
 
@@ -72,12 +72,13 @@ class Character
             {
                 this.weapon.active = false;
                 this.weapon.curSize = 0;
-                this.disabledFrames = this.missPenalty*.5//half the penalty for neutral attack missing;
+                this.disabledFrames = this.missPenalty
             }
             else
             {
                 this.attacking = false;
                 this.weapon.frame = 0;
+                this.disabledFrames = this.missPenalty*.5;//half the penalty for dash attack missing
             }
         }
 
@@ -100,12 +101,13 @@ class Character
             {
                 this.weapon.active = false;
                 this.weapon.curSize = 0;
-                this.disabledFrames = this.missPenalty;//double the penalty for dash attack missing
+                this.disabledFrames = this.missPenalty;
             }
             else
             {
                 this.dashAttacking = false;
                 this.weapon.frame = 0;
+                this.disabledFrames = this.missPenalty;
             }
         }
 
@@ -120,9 +122,12 @@ class Character
             this.disabledFrames -= 1 * this.runtime;
             this.x += (this.oldDir * (this.speed * ((this.missPenalty-this.disabledFrames) /this.missPenalty)) + this.currentForce) * this.runtime;
         }
-        else
+        else if (this.disabledFrames == 0)
         {
-            this.inDashAttackLag = false;
+            if (this.inDashAttackLag)
+            {
+                this.inDashAttackLag=false;
+            }
             this.x += (this.oldDir * this.speed + this.currentForce) * this.runtime;
         }
 
