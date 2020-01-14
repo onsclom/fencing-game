@@ -1,6 +1,6 @@
 class Character
 {
-    constructor(x, y, size, color, disColor, side)
+    constructor(x, y, size, color, disColor, dashAttackingColor, side)
     {
         this.runtime = 1; //FOR SLOW MO!
 
@@ -11,6 +11,7 @@ class Character
         this.size = size;
         this.color = color;
         this.disabledColor = disColor;
+        this.dashAttackingColor = dashAttackingColor;
         this.left = false;
         this.right = false;
         this.speed = 2;
@@ -18,11 +19,13 @@ class Character
         this.oldDir = 0; //saves for slowmo TODO
         this.side = side; //"left" or "right"
         this.disabledFrames = 0;
+        this.inDashAttackLag = false;
         this.missPenalty = 20;
         this.falling = false;
         this.gravity = 0;
 
         this.attacking = false;
+        this.dashAttacking = false;
         this.weapon = {
             unactiveColor: '#000',
             frame: 0,
@@ -49,7 +52,6 @@ class Character
 
     update()
     {
-
         //weapon stuff
         if (this.attacking)
         {
@@ -70,11 +72,39 @@ class Character
             {
                 this.weapon.active = false;
                 this.weapon.curSize = 0;
-                this.disabledFrames = this.missPenalty;
+                this.disabledFrames = this.missPenalty*.5//half the penalty for neutral attack missing;
             }
             else
             {
                 this.attacking = false;
+                this.weapon.frame = 0;
+            }
+        }
+
+        if (this.dashAttacking)
+        {
+            this.weapon.frame += 1 * this.runtime;
+
+            if (this.weapon.frame <= this.weapon.framesProtracting)
+            {
+                this.weapon.active = true;
+                this.weapon.curSize = this.weapon.maxSize*.85 * (this.weapon.frame / this.weapon.framesProtracting);
+                this.disabledFrames = this.missPenalty;
+            }
+            else if (this.weapon.frame <= (this.weapon.framesProtracting + this.weapon.framesMaxed))
+            {
+                this.weapon.active = true;
+                this.disabledFrames = this.missPenalty;
+            }
+            else if (this.weapon.frame <= (this.weapon.totalFrames))
+            {
+                this.weapon.active = false;
+                this.weapon.curSize = 0;
+                this.disabledFrames = this.missPenalty;//double the penalty for dash attack missing
+            }
+            else
+            {
+                this.dashAttacking = false;
                 this.weapon.frame = 0;
             }
         }
@@ -88,17 +118,18 @@ class Character
         if (this.disabledFrames > 0)
         {
             this.disabledFrames -= 1 * this.runtime;
-            this.x += (this.oldDir * (this.speed / 4) + this.currentForce) * this.runtime;
+            this.x += (this.oldDir * (this.speed * ((this.missPenalty-this.disabledFrames) /this.missPenalty)) + this.currentForce) * this.runtime;
         }
         else
         {
+            this.inDashAttackLag = false;
             this.x += (this.oldDir * this.speed + this.currentForce) * this.runtime;
         }
 
         //slowdown force (friction)
         if (this.currentForce != 0)
         {
-            this.currentForce *= .9;
+            this.currentForce *= .9 + .1*(1-this.runtime);
         }
         if (Math.abs(this.currentForce) < .1)
         {
@@ -143,7 +174,11 @@ class Character
     drawPlayer()
     {
         fill(this.color);
-        if (this.disabledFrames > 0)
+        if (this.inDashAttackLag)
+        {
+            fill(this.dashAttackingColor);
+        }
+        else if (this.disabledFrames > 0)
         {
             fill(this.disabledColor);
         }
@@ -235,9 +270,26 @@ class Character
 
     attack()
     {
-        if (this.disabledFrames == 0 && this.dir == 0)
+        if (this.runtime != 1) //if it is in replay dont attack
         {
-            this.attacking = true;
+            return;
+        }
+        if (this.disabledFrames == 0 && ((this.side=="left" && this.dir == 1) && (this.dashing==false || this.dashDir!="right") 
+            || (this.side=="right" && this.dir == -1) && (this.dashing==false || this.dashDir!="left")))
+        {
+            //dash forward
+            this.dashing = true;
+            this.dashFrame = this.dashCooldown;
+            this.forceBack(-4);
+
+            if (this.dir == 1)
+            {
+                this.dashDir = "right";
+            }
+            else
+            {
+                this.dashDir = "left";
+            }
         }
         else if (this.disabledFrames == 0 && ((this.side=="left" && this.dir == -1) && (this.dashing==false || this.dashDir!="left") 
         || (this.side=="right" && this.dir == 1) && (this.dashing==false || this.dashDir!="right")))
@@ -255,24 +307,21 @@ class Character
             {
                 this.dashDir = "left";
             }
-
         }
-        else if (this.disabledFrames == 0 && ((this.side=="left" && this.dir == 1) && (this.dashing==false || this.dashDir!="right") 
-            || (this.side=="right" && this.dir == -1) && (this.dashing==false || this.dashDir!="left")))
+        else if (!this.dashAttacking && (this.side=="right" && this.dashing && this.dashDir=="left" || this.side=="left" && this.dashing && this.dashDir=="right"))
+        //if dashing in, then allow dash attack
         {
-            //dash forward
-            this.dashing = true;
-            this.dashFrame = this.dashCooldown;
-            this.forceBack(-4);
-
-            if (this.dir == 1)
-            {
-                this.dashDir = "right";
-            }
-            else
-            {
-                this.dashDir = "left";
-            }
+            this.dashAttacking = true;
+            this.forceBack(-3,"add");
+            this.inDashAttackLag = true;
+        }
+        else if (this.disabledFrames == 0 && this.dir == 0)
+        {
+            this.attacking = true;
+        }
+        else if (!this.dashAttacking && this.disabledFrames == 0)
+        {
+            this.attacking = true;
         }
     }
 
@@ -289,12 +338,26 @@ class Character
         this.dashing = false;
         this.y = this.initialy;
         this.x = this.initialx;
+        this.dashAttacking=false;
+        this.inDashAttackLag=false;
     }
 
-    forceBack(amt)
+    forceBack(amt,opt)
     {
-        //smoothen this out later
-        if (this.side == "left")
+
+        if (opt == "add")
+        {
+            if (this.side == "left")
+            {
+                this.currentForce -= amt;
+            }
+            else
+            {
+                this.currentForce += amt;
+            }
+        }
+
+        else if (this.side == "left")
         {
             this.currentForce = -amt;
         }

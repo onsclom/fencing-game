@@ -1,6 +1,6 @@
 class Character
 {
-    constructor(x, y, size, color, disColor, side)
+    constructor(x, y, size, color, disColor, unusedColorForAdvancedMode, side)
     {
         this.runtime = 1; //FOR SLOW MO!
 
@@ -32,9 +32,9 @@ class Character
             holdOffset: 3,
             active: false,
             activeColor: '#fff',
-            framesProtracting: 5,
+            framesProtracting: 3,
             framesMaxed: 10,
-            framesRetracting: 15, //not drawing this anymore, so framesRetracting+missPenalty = total lag
+            framesRetracting: 1, //not drawing this anymore, so framesRetracting+missPenalty = total lag
         }
         this.weapon.totalFrames = this.weapon.framesProtracting + this.weapon.framesMaxed + this.weapon.framesRetracting;
 
@@ -85,7 +85,7 @@ class Character
         if (this.disabledFrames > 0)
         {
             this.disabledFrames -= 1 * this.runtime;
-            this.x += (this.oldDir * (this.speed / 4) + this.currentForce) * this.runtime;
+            this.x += (this.oldDir * (this.speed* ( (this.missPenalty-this.disabledFrames) /this.missPenalty) ) + this.currentForce) * this.runtime;
         }
         else
         {
@@ -95,7 +95,7 @@ class Character
         //slowdown force (friction)
         if (this.currentForce != 0)
         {
-            this.currentForce *= .5;
+            this.currentForce *= .8;
         }
         if (Math.abs(this.currentForce) < .1)
         {

@@ -13,12 +13,14 @@ class Game
         this.charSize = 30;
         let leftColor = color('#44f');
         let leftDisabledColor = color('#88f');
+        let leftDashAttackingColor = color('#00c');
         let rightColor = color('#f44');
         let rightDisabledColor = color('#f88');
+        let rightDashAttackingColor = color('#c00');
         this.leftStart = (2 / 8) * width;
         this.rightStart = width * (6 / 8) - this.charSize;
-        this.leftPlayer = new Character((2 / 8) * width, this.platform.y - this.charSize, this.charSize, leftColor, leftDisabledColor, "left");
-        this.rightPlayer = new Character(width * (6 / 8) - this.charSize, this.platform.y - this.charSize, this.charSize, rightColor, rightDisabledColor, "right");
+        this.leftPlayer = new Character((2 / 8) * width, this.platform.y - this.charSize, this.charSize, leftColor, leftDisabledColor, leftDashAttackingColor, "left");
+        this.rightPlayer = new Character(width * (6 / 8) - this.charSize, this.platform.y - this.charSize, this.charSize, rightColor, rightDisabledColor, rightDashAttackingColor, "right");
 
 
         this.leftScore = 0;
@@ -183,8 +185,19 @@ class Game
         rightSwordTouching = rightSwordTouching && (this.rightPlayer.y+this.rightPlayer.weapon.holdOffset+this.rightPlayer.weapon.width > this.leftPlayer.y && this.rightPlayer.y+this.rightPlayer.weapon.holdOffset < this.leftPlayer.y+this.leftPlayer.size);
         if (leftSwordTouching && rightSwordTouching)
         {
-            this.leftPlayer.forceBack(4);
-            this.rightPlayer.forceBack(4);
+            if (this.leftPlayer.weapon.curSize > this.rightPlayer.weapon.curSize) //covers scenario where frame skips over the sword that should have won instead of going into tie
+            {
+                this.pointScored("left");
+            }
+            else if (ththis.leftPlayer.weapon.curSize < this.rightPlayer.weapon.curSize)
+            {
+                this.pointScored("right");
+            }
+            else//then is really is a tie
+            {
+                this.leftPlayer.forceBack(4);
+                this.rightPlayer.forceBack(4);
+            }
         }
         else if (leftSwordTouching)
         {
