@@ -105,9 +105,9 @@ class Character
             }
             else
             {
-                this.dashAttacking = false;
                 this.weapon.frame = 0;
                 this.disabledFrames = this.missPenalty;
+                this.dashAttacking = false;
             }
         }
 
@@ -313,7 +313,7 @@ class Character
                 this.dashDir = "left";
             }
         }
-        else if (!this.dashAttacking && (this.side=="right" && this.dashing && this.dashDir=="left" || this.side=="left" && this.dashing && this.dashDir=="right"))
+        else if (!this.dashAttacking && !this.inDashAttackLag && (this.side=="right" && this.dashing && this.dashDir=="left" || this.side=="left" && this.dashing && this.dashDir=="right"))
         //if dashing in, then allow dash attack
         {
             this.dashAttacking = true;
