@@ -1,2 +1,3 @@
-# footsiesGame
-Basic fighting game meant to be played by two people on one computer.
+# Fencing game
+
+A browser game made using the library p5.js.
